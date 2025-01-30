@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { AuthenticatedRequest } from "../middlewares/auth";
 import { meetingService } from "../services/meetingService";
 
@@ -51,10 +51,8 @@ export const meetingController = {
       const { id } = req.params;
       const userId = req.userId!;
 
-      // Get meeting from the service
       const meeting = await meetingService.getMeetingById(id);
 
-      // Check if meeting exists
       if (!meeting) {
         res.status(404).json({
           message: "Meeting not found",
@@ -62,7 +60,6 @@ export const meetingController = {
         return;
       }
 
-      // Check if the user is authorized to view the meeting
       if (meeting.userId !== userId) {
         res.status(403).json({
           status: "fail",
@@ -71,7 +68,6 @@ export const meetingController = {
         return;
       }
 
-      // Return the meeting details
       res.status(200).json(meeting);
     } catch (err) {
       next(err);
@@ -114,7 +110,7 @@ export const meetingController = {
     next: NextFunction
   ) => {
     try {
-      const stats = await meetingService.getStats();
+      const stats = await meetingService.getMeetingStats();
       res.status(200).json(stats);
     } catch (err) {
       next(err);
