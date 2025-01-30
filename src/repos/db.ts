@@ -22,4 +22,12 @@ export const db = {
   updateById: async (model: any, id: string, updateData: any) => {
     return model.findByIdAndUpdate(id, updateData, { new: true });
   },
+
+  findWithProjection: (Model: any, filter: any, projection: any) => {
+    return Model.find(filter, projection);
+  },
+
+  countDocuments: (Model: any, filter: any) => {
+    return Model.countDocuments(filter);
+  },
 };
