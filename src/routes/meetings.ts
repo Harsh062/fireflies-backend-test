@@ -1,6 +1,8 @@
 import express from "express";
 import { Meeting } from "../models/meeting.js";
-import { AuthenticatedRequest } from "../auth.middleware.js";
+import { AuthenticatedRequest } from "../middlewares/auth";
+import { validate } from "../middlewares/validate";
+import { meetingSchema } from "../schemas/meetingSchema";
 
 export const router = express.Router();
 
@@ -20,25 +22,29 @@ router.get("/", async (req: AuthenticatedRequest, res) => {
 });
 
 // POST - Create a new meeting
-router.post("/", async (req: AuthenticatedRequest, res) => {
-  try {
-    const { title, date, participants } = req.body;
-    const newMeeting = new Meeting({
-      userId: req.userId,
-      title,
-      date,
-      participants,
-      transcript: "",
-      summary: "",
-      duration: 0,
-      actionItems: [],
-    });
-    await newMeeting.save();
-    res.status(201).json(newMeeting);
-  } catch (err) {
-    res.status(500).json({ message: (err as Error).message });
+router.post(
+  "/",
+  validate(meetingSchema),
+  async (req: AuthenticatedRequest, res) => {
+    try {
+      const { title, date, participants } = req.body;
+      const newMeeting = new Meeting({
+        userId: req.userId,
+        title,
+        date,
+        participants,
+        transcript: "",
+        summary: "",
+        duration: 0,
+        actionItems: [],
+      });
+      await newMeeting.save();
+      res.status(201).json(newMeeting);
+    } catch (err) {
+      res.status(500).json({ message: (err as Error).message });
+    }
   }
-});
+);
 
 // GET - Retrieve a specific meeting by ID (include tasks if available)
 router.get("/:id", async (req: AuthenticatedRequest, res) => {

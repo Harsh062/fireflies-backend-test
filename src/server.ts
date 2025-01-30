@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import { meetingRoutes } from "./routes/meetings.js";
 import { dashboardRoutes } from "./routes/dashboardRoutes.js";
-import { authMiddleware } from "./auth.middleware.js";
+import { authMiddleware } from "./middlewares/auth";
 
 const { PORT = 3000, MONGODB_URI = "mongodb://localhost:27017/meetingbot" } =
   process.env;
