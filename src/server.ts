@@ -1,6 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
-import { meetingRoutes } from "./routes/meetings.js";
+import { meetingRoutes } from "./routes/meetingRoute";
 import { dashboardRoutes } from "./routes/dashboardRoutes.js";
 import { authMiddleware } from "./middlewares/auth";
 
