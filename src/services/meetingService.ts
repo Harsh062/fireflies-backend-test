@@ -1,5 +1,10 @@
 import { IMeeting } from "../models/meeting";
 import { meetingRepo } from "../repos/meetingRepo";
+import {
+  NotFoundError,
+  UnauthorizedError,
+  ValidationError,
+} from "../utils/errors";
 import { aiService } from "./aiService";
 
 export const meetingService = {
@@ -24,16 +29,21 @@ export const meetingService = {
   },
 
   summarizeMeeting: async (meetingId: string, userId: string) => {
-    const meeting = await meetingRepo.findMeetingByIdAndUser(meetingId, userId);
+    const meeting = await meetingRepo.findMeetingById(meetingId);
 
     if (!meeting) {
-      throw new Error("Meeting not found or unauthorized");
+      throw new NotFoundError("Meeting not found");
     }
 
-    const { transcript } = meeting;
+    if (meeting.userId !== userId) {
+      throw new UnauthorizedError(
+        "You are not authorized to summarize this meeting"
+      );
+    }
 
-    if (!transcript || transcript.trim() === "") {
-      throw new Error("Transcript is missing or empty for this meeting");
+    const transcript = meeting.transcript?.trim();
+    if (!transcript) {
+      throw new ValidationError("Transcript is missing or empty");
     }
 
     // Call the AI service to generate summary and action items
