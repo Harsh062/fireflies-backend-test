@@ -1,6 +1,7 @@
 import { Response, NextFunction } from "express";
 import { AuthenticatedRequest } from "../middlewares/auth";
 import { meetingService } from "../services/meetingService";
+import { NotFoundError, UnauthorizedError } from "../utils/errors";
 
 export const meetingController = {
   getAllMeetings: async (
@@ -54,18 +55,11 @@ export const meetingController = {
       const meeting = await meetingService.getMeetingById(id);
 
       if (!meeting) {
-        res.status(404).json({
-          message: "Meeting not found",
-        });
-        return;
+        throw new NotFoundError("Meeting not found");
       }
 
       if (meeting.userId !== userId) {
-        res.status(403).json({
-          status: "fail",
-          message: "Unauthorized to view this meeting",
-        });
-        return;
+        throw new UnauthorizedError("Unauthorized to view this meeting");
       }
 
       res.status(200).json(meeting);
@@ -88,15 +82,10 @@ export const meetingController = {
         transcript
       );
       if (!updatedMeeting) {
-        res.status(404).json({ message: "Meeting not found" });
-        return;
+        throw new NotFoundError("Meeting not found");
       }
       if (updatedMeeting.userId !== userId) {
-        res.status(403).json({
-          status: "fail",
-          message: "Unauthorized to update this meeting",
-        });
-        return;
+        throw new UnauthorizedError("Unauthorized to update this meeting");
       }
       res.status(200).json(updatedMeeting);
     } catch (err) {
