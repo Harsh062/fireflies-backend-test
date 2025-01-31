@@ -116,4 +116,25 @@ export const meetingController = {
       next(err);
     }
   },
+
+  summarizeMeeting: async (
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { id: meetingId } = req.params;
+      const userId = req.userId!;
+
+      const result = await meetingService.summarizeMeeting(meetingId, userId);
+
+      res.status(200).json({
+        message: "Meeting summarized successfully",
+        summary: result.summary,
+        actionItems: result.actionItems,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

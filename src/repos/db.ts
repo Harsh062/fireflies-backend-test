@@ -1,4 +1,10 @@
+import { Model, FilterQuery, UpdateQuery, Document, AnyKeys } from "mongoose";
+
 export const db = {
+  findOne: <T>(model: Model<T>, filter: FilterQuery<T>) => {
+    return model.findOne(filter);
+  },
+
   find: async (
     model: any,
     query: any,
@@ -29,5 +35,17 @@ export const db = {
 
   countDocuments: (Model: any, filter: any) => {
     return Model.countDocuments(filter);
+  },
+
+  updateOne: <T>(
+    model: Model<T>,
+    filter: FilterQuery<T>,
+    update: UpdateQuery<T>
+  ) => {
+    return model.updateOne(filter, update, { new: true }); // `new: true` ensures the updated document is returned
+  },
+
+  insertMany: <T>(model: Model<T>, documents: AnyKeys<T>[]) => {
+    return model.insertMany(documents);
   },
 };

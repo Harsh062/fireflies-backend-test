@@ -1,7 +1,12 @@
 import { IMeeting, Meeting } from "../models/meeting";
+import { Task } from "../models/task";
 import { db } from "./db";
 
 export const meetingRepo = {
+  findMeetingByIdAndUser: async (meetingId: string, userId: string) => {
+    return db.findOne(Meeting, { _id: meetingId, userId });
+  },
+
   findMeetings: async (userId: string, page: number, limit: number) => {
     return db.find(Meeting, { userId }, { page, limit });
   },
@@ -105,5 +110,30 @@ export const meetingRepo = {
         return { dayOfWeek: index + 1, count: dayStats.count || 0 };
       }),
     };
+  },
+
+  // Update meeting summary and action items
+  updateMeetingSummaryAndActionItems: async (
+    meetingId: string,
+    summary: string,
+    actionItems: string[]
+  ) => {
+    return db.updateOne(Meeting, { _id: meetingId }, { summary, actionItems });
+  },
+
+  // Create tasks for a meeting
+  createTasksForMeeting: async (
+    meetingId: string,
+    tasks: string[],
+    userId: string
+  ) => {
+    const taskDocuments = tasks.map((task) => ({
+      title: task,
+      dueDate: null, // Set due dates as required
+      status: "pending",
+      meetingId,
+      userId,
+    }));
+    return db.insertMany(Task, taskDocuments);
   },
 };

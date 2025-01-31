@@ -10,5 +10,6 @@ router.post("/", validate(meetingSchema), meetingController.createMeeting);
 router.get("/stats", meetingController.getStats);
 router.get("/:id", meetingController.getMeetingById);
 router.put("/:id/transcript", meetingController.updateTranscript);
+router.post("/:id/summarize", meetingController.summarizeMeeting);
 
 export { router as meetingRoutes };

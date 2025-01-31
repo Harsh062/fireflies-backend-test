@@ -1,3 +1,4 @@
+import { IMeeting } from "../models/meeting";
 import { dashboardRepo } from "../repos/dashboardRepo";
 
 export const dashboardService = {
@@ -19,12 +20,14 @@ export const dashboardService = {
     };
 
     // Format upcoming meetings with participant count
-    const formattedUpcomingMeetings = upcomingMeetings.map((meeting) => ({
-      _id: meeting._id,
-      title: meeting.title,
-      date: meeting.date,
-      participantCount: meeting.participants.length,
-    }));
+    const formattedUpcomingMeetings = upcomingMeetings.map(
+      (meeting: IMeeting) => ({
+        _id: meeting._id,
+        title: meeting.title,
+        date: meeting.date,
+        participantCount: meeting.participants.length,
+      })
+    );
 
     return {
       totalMeetings,
