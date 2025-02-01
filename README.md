@@ -94,7 +94,11 @@ docker-compose exec app npm run test
 
 - `GET /api/dashboard` – Get a summary of user meetings and tasks.
 
-**Refer to the postman collection for more details.**
+### Postman Collection
+
+To test and explore the API, use the **Postman collection**:
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://github.com/Harsh062/fireflies-backend-test/blob/master/postman_collection.json)
 
 ## Error Handling
 
