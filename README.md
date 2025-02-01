@@ -110,12 +110,6 @@ All errors are standardized and return JSON responses:
 }
 ```
 
-## Libraries used
-
-- **Zod** is used for schema validation for API requests.
-- **Jest** is used for writing unit testing cases.
-- **node-cache** is used for caching for improving response time for meeting stats API
-
 ### Common Error Codes
 
 - **400** – Bad Request (Validation error)
@@ -124,3 +118,9 @@ All errors are standardized and return JSON responses:
 - **500** – Internal Server Error (Unexpected issues)
 
 For additional details on project structure, optimizations, and security fixes, refer to [Project Overview](https://github.com/Harsh062/fireflies-backend-test/blob/master/project-overview.md).
+
+## Libraries used
+
+- **Zod** is used for schema validation for API requests.
+- **Jest** is used for writing unit testing cases.
+- **node-cache** is used for caching for improving response time for meeting stats API

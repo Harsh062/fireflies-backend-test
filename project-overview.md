@@ -39,4 +39,4 @@ As a bonus, I implemented **AI-powered meeting categorization**. Based on the tr
 
 ---
 
-For further details, check out the [README](https://github.com/Harsh062/fireflies-backend-test/blob/master/project-overview.md).
+For further details, check out the [README](https://github.com/Harsh062/fireflies-backend-test/blob/master/README.md).
