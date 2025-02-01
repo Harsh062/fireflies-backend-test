@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { Meeting, IMeeting } from "./models/meeting.js";
 import { Task, ITask } from "./models/task.js";
 
-const MONGODB_URI = "mongodb://localhost:27017/meetingbot";
+const MONGODB_URI = "mongodb://mongo:27017/meetingbot";
 
 await mongoose
   .connect(MONGODB_URI)

@@ -4,7 +4,7 @@ import { meetingRoutes } from "./routes/meetingRoute";
 import { dashboardRoutes } from "./routes/dashboardRoutes.js";
 import { authMiddleware } from "./middlewares/auth";
 
-const { PORT = 3000, MONGODB_URI = "mongodb://localhost:27017/meetingbot" } =
+const { PORT = 3000, MONGODB_URI = "mongodb://mongo:27017/meetingbot" } =
   process.env;
 
 const app = express();

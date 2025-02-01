@@ -1,0 +1,36 @@
+version: "3.9"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fireflies_app
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_URI: mongodb://mongo:27017/meetingbot
+      NODE_ENV: development
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:5.0
+    container_name: fireflies_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  seed:
+    build:
+      context: .
+      dockerfile: Dockerfile.seed
+    container_name: fireflies_seed
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URI: mongodb://mongo:27017/meetingbot
+    command: ["npm", "run", "seed"]
+
+volumes:
+  mongo_data:
