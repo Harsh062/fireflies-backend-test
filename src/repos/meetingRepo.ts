@@ -3,34 +3,42 @@ import { IMeeting, Meeting } from "../models/meeting";
 import { Task } from "../models/task";
 import { db } from "./db";
 
-const cache = new NodeCache({ stdTTL: 300 }); // Caching results for 5 minutes
+// Initialize cache with a 5-minute TTL (Time To Live)
+const cache = new NodeCache({ stdTTL: 300 });
 
 export const meetingRepo = {
+  // Find a meeting by ID and user (ensuring ownership)
   findMeetingByIdAndUser: async (meetingId: string, userId: string) => {
     return db.findOne(Meeting, { _id: meetingId, userId });
   },
 
+  // Fetch paginated meetings for a user, sorted by date
   findMeetings: async (userId: string, page: number, limit: number) => {
     return db.find(Meeting, { userId }, { page, limit }, { date: -1 });
   },
 
+  // Create a new meeting record
   createMeeting: async (meetingData: any) => {
     return db.create(Meeting, meetingData);
   },
 
+  // Retrieve a meeting by ID
   findMeetingById: async (id: string): Promise<IMeeting | null> => {
     return db.findById(Meeting, id);
   },
 
+  // Update specific fields of a meeting
   updateMeeting: async (id: string, updateData: any) => {
     return db.updateById(Meeting, id, updateData);
   },
 
+  // Retrieve statistics about a user's meetings
   getMeetingStats: async (userId: string) => {
-    // Check cache first
+    // Check if cached stats exist to avoid unnecessary database queries
     const cachedStats = cache.get(`meetingStats_${userId}`);
     if (cachedStats) return cachedStats;
 
+    // Aggregate general statistics about meetings
     const generalStats = await Meeting.aggregate([
       { $match: { userId } },
       {
@@ -80,6 +88,7 @@ export const meetingRepo = {
       },
     ]);
 
+    // Identify the top 5 most active participants
     const topParticipants = await Meeting.aggregate([
       { $match: { userId } },
       { $unwind: "$participants" },
@@ -88,6 +97,7 @@ export const meetingRepo = {
       { $limit: 5 },
     ]);
 
+    // Count meetings grouped by the day of the week
     const meetingsByDayOfWeek = await Meeting.aggregate([
       { $match: { userId } },
       {
@@ -99,6 +109,7 @@ export const meetingRepo = {
       { $sort: { _id: 1 } },
     ]);
 
+    // Construct final stats response
     const stats = {
       generalStats: {
         totalMeetings: generalStats[0]?.totalMeetings || 0,
@@ -119,11 +130,13 @@ export const meetingRepo = {
       }),
     };
 
+    // Store the stats in cache to reduce load on the database
     cache.set(`meetingStats_${userId}`, stats, 300); // Cache for 5 minutes
 
     return stats;
   },
 
+  // Update a meeting with AI-generated summary, action items, and category
   updateMeetingSummaryAndActionItems: async (
     meetingId: string,
     summary: string,
@@ -140,7 +153,7 @@ export const meetingRepo = {
     ]);
   },
 
-  // Create tasks for a meeting
+  // Create tasks linked to a specific meeting
   createTasksForMeeting: async (
     meetingId: string,
     tasks: string[],
@@ -148,7 +161,7 @@ export const meetingRepo = {
   ) => {
     const taskDocuments = tasks.map((task) => ({
       title: task,
-      dueDate: null, // Set due dates as required
+      dueDate: null, // Can be set dynamically based on business logic
       status: "pending",
       meetingId,
       userId,

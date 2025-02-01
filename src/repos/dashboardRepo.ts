@@ -3,42 +3,42 @@ import { Task } from "../models/task";
 import { db } from "./db";
 
 export const dashboardRepo = {
-  // Fetch upcoming meetings for the user
+  // Retrieve the next 5 upcoming meetings for a user
   getUpcomingMeetings: async (userId: string) => {
     return db
       .findWithProjection(
         Meeting,
         {
           userId,
-          date: { $gte: new Date() }, // Only future meetings
+          date: { $gte: new Date() }, // Filter for future meetings only
         },
         {
           _id: 1,
           title: 1,
           date: 1,
-          participants: 1, // Needed for participantCount
+          participants: 1, // Included to calculate participant count
         }
       )
-      .sort({ date: 1 })
-      .limit(5); // Sort by date and limit to 5
+      .sort({ date: 1 }) // Sort in ascending order (earliest first)
+      .limit(5); // Return a maximum of 5 meetings
   },
 
-  // Fetch task summary grouped by status
+  // Aggregate and count tasks by status (e.g., pending, completed)
   getTaskSummary: async (userId: string) => {
     return Task.aggregate([
-      { $match: { userId } },
-      { $group: { _id: "$status", count: { $sum: 1 } } },
+      { $match: { userId } }, // Filter tasks by user
+      { $group: { _id: "$status", count: { $sum: 1 } } }, // Group by status and count occurrences
     ]);
   },
 
-  // Fetch overdue tasks and look up their meeting titles
+  // Retrieve overdue tasks along with the corresponding meeting titles
   getOverdueTasks: async (userId: string) => {
     return Task.aggregate([
       {
         $match: {
           userId,
-          dueDate: { $lt: new Date() },
-          status: { $ne: "completed" },
+          dueDate: { $lt: new Date() }, // Only overdue tasks
+          status: { $ne: "completed" }, // Exclude completed tasks
         },
       },
       {
@@ -49,20 +49,20 @@ export const dashboardRepo = {
           as: "meetingInfo",
         },
       },
-      { $unwind: "$meetingInfo" },
+      { $unwind: "$meetingInfo" }, // Flatten the meeting details array
       {
         $project: {
           _id: 1,
           title: 1,
           dueDate: 1,
           meetingId: 1,
-          meetingTitle: "$meetingInfo.title",
+          meetingTitle: "$meetingInfo.title", // Extract meeting title
         },
       },
     ]);
   },
 
-  // Fetch total meetings count for the user
+  // Get the total count of meetings for a user
   getTotalMeetingsCount: async (userId: string) => {
     return db.countDocuments(Meeting, { userId });
   },

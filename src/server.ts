@@ -4,6 +4,7 @@ import { meetingRoutes } from "./routes/meetingRoute";
 import { dashboardRoutes } from "./routes/dashboardRoutes.js";
 import { authMiddleware } from "./middlewares/auth";
 
+// Load environment variables with defaults
 const { PORT = 3000, MONGODB_URI = "mongodb://mongo:27017/meetingbot" } =
   process.env;
 
@@ -11,13 +12,16 @@ const app = express();
 
 app.use(express.json());
 
+// Root endpoint for basic health check
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to the MeetingBot API" });
 });
 
+// Protected API routes
 app.use("/api/meetings", authMiddleware, meetingRoutes);
 app.use("/api/dashboard", authMiddleware, dashboardRoutes);
 
+// Function to establish MongoDB connection and start the server
 const startServer = async () => {
   try {
     await mongoose.connect(MONGODB_URI);
@@ -32,4 +36,5 @@ const startServer = async () => {
   }
 };
 
+// Initialize the server
 startServer();
