@@ -24,4 +24,7 @@ const meetingSchema = new Schema<IMeeting>({
   category: { type: String, default: "General" },
 });
 
+meetingSchema.index({ userId: 1, date: -1 }); // Optimize user-based searches
+meetingSchema.index({ title: "text" }); // Full-text search for titles
+
 export const Meeting = mongoose.model<IMeeting>("Meeting", meetingSchema);

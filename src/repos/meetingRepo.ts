@@ -1,6 +1,9 @@
+import NodeCache from "node-cache";
 import { IMeeting, Meeting } from "../models/meeting";
 import { Task } from "../models/task";
 import { db } from "./db";
+
+const cache = new NodeCache({ stdTTL: 300 }); // Caching results for 5 minutes
 
 export const meetingRepo = {
   findMeetingByIdAndUser: async (meetingId: string, userId: string) => {
@@ -8,7 +11,7 @@ export const meetingRepo = {
   },
 
   findMeetings: async (userId: string, page: number, limit: number) => {
-    return db.find(Meeting, { userId }, { page, limit });
+    return db.find(Meeting, { userId }, { page, limit }, { date: -1 });
   },
 
   createMeeting: async (meetingData: any) => {
@@ -23,8 +26,13 @@ export const meetingRepo = {
     return db.updateById(Meeting, id, updateData);
   },
 
-  getMeetingStats: async () => {
+  getMeetingStats: async (userId: string) => {
+    // Check cache first
+    const cachedStats = cache.get(`meetingStats_${userId}`);
+    if (cachedStats) return cachedStats;
+
     const generalStats = await Meeting.aggregate([
+      { $match: { userId } },
       {
         $facet: {
           totalMeetings: [{ $count: "totalMeetings" }],
@@ -55,9 +63,7 @@ export const meetingRepo = {
       {
         $project: {
           totalMeetings: { $arrayElemAt: ["$totalMeetings.totalMeetings", 0] },
-          totalParticipants: {
-            $arrayElemAt: ["$totalParticipants.total", 0],
-          },
+          totalParticipants: { $arrayElemAt: ["$totalParticipants.total", 0] },
           averageParticipants: {
             $arrayElemAt: ["$averageParticipants.avgParticipants", 0],
           },
@@ -75,6 +81,7 @@ export const meetingRepo = {
     ]);
 
     const topParticipants = await Meeting.aggregate([
+      { $match: { userId } },
       { $unwind: "$participants" },
       { $group: { _id: "$participants", meetingCount: { $sum: 1 } } },
       { $sort: { meetingCount: -1 } },
@@ -82,16 +89,17 @@ export const meetingRepo = {
     ]);
 
     const meetingsByDayOfWeek = await Meeting.aggregate([
+      { $match: { userId } },
       {
         $group: {
           _id: { $dayOfWeek: "$date" },
           count: { $sum: 1 },
         },
       },
-      { $sort: { _id: 1 } }, // Sort by day of the week (Sunday = 1, Monday = 2, etc.)
+      { $sort: { _id: 1 } },
     ]);
 
-    return {
+    const stats = {
       generalStats: {
         totalMeetings: generalStats[0]?.totalMeetings || 0,
         averageParticipants: generalStats[0]?.averageParticipants || 0,
@@ -100,30 +108,36 @@ export const meetingRepo = {
         longestMeeting: generalStats[0]?.longestMeeting || 0,
         averageDuration: generalStats[0]?.averageDuration || 0,
       },
-      topParticipants: topParticipants.map((participant) => ({
+      topParticipants: topParticipants.map((participant: any) => ({
         participant: participant._id,
         meetingCount: participant.meetingCount,
       })),
       meetingsByDayOfWeek: Array.from({ length: 7 }, (_, index) => {
         const dayStats =
-          meetingsByDayOfWeek.find((d) => d._id === index + 1) || {};
+          meetingsByDayOfWeek.find((d: any) => d._id === index + 1) || {};
         return { dayOfWeek: index + 1, count: dayStats.count || 0 };
       }),
     };
+
+    cache.set(`meetingStats_${userId}`, stats, 300); // Cache for 5 minutes
+
+    return stats;
   },
 
-  // Update meeting summary and action items
   updateMeetingSummaryAndActionItems: async (
     meetingId: string,
     summary: string,
     actionItems: string[],
     category: string
   ) => {
-    return db.updateOne(
-      Meeting,
-      { _id: meetingId },
-      { summary, actionItems, category }
-    );
+    return Meeting.bulkWrite([
+      {
+        updateOne: {
+          filter: { _id: meetingId },
+          update: { $set: { summary, actionItems, category } },
+        },
+      },
+    ]);
   },
 
   // Create tasks for a meeting

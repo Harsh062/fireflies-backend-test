@@ -24,8 +24,8 @@ export const meetingService = {
     return meetingRepo.updateMeeting(id, { transcript });
   },
 
-  getMeetingStats: async () => {
-    return meetingRepo.getMeetingStats();
+  getMeetingStats: async (userId: string) => {
+    return meetingRepo.getMeetingStats(userId);
   },
 
   summarizeMeeting: async (meetingId: string, userId: string) => {

@@ -98,8 +98,9 @@ export const meetingController = {
     res: Response,
     next: NextFunction
   ) => {
+    const userId = req.userId!;
     try {
-      const stats = await meetingService.getMeetingStats();
+      const stats = await meetingService.getMeetingStats(userId);
       res.status(200).json(stats);
     } catch (err) {
       next(err);

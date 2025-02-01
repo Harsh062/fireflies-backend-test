@@ -8,10 +8,12 @@ export const db = {
   find: async (
     model: any,
     query: any,
-    { page, limit }: { page: number; limit: number }
+    { page, limit }: { page: number; limit: number },
+    sort: any = { date: -1 }
   ) => {
     return model
       .find(query)
+      .sort(sort)
       .skip((page - 1) * limit)
       .limit(limit);
   },
