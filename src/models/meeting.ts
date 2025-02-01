@@ -9,6 +9,7 @@ export interface IMeeting extends Document {
   summary: string;
   duration: number;
   actionItems: string[];
+  category: string;
 }
 
 const meetingSchema = new Schema<IMeeting>({
@@ -20,6 +21,7 @@ const meetingSchema = new Schema<IMeeting>({
   summary: String,
   duration: Number,
   actionItems: [String],
+  category: { type: String, default: "General" },
 });
 
 export const Meeting = mongoose.model<IMeeting>("Meeting", meetingSchema);

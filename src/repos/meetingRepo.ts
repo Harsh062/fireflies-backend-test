@@ -116,9 +116,14 @@ export const meetingRepo = {
   updateMeetingSummaryAndActionItems: async (
     meetingId: string,
     summary: string,
-    actionItems: string[]
+    actionItems: string[],
+    category: string
   ) => {
-    return db.updateOne(Meeting, { _id: meetingId }, { summary, actionItems });
+    return db.updateOne(
+      Meeting,
+      { _id: meetingId },
+      { summary, actionItems, category }
+    );
   },
 
   // Create tasks for a meeting

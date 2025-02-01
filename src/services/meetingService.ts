@@ -47,18 +47,19 @@ export const meetingService = {
     }
 
     // Call the AI service to generate summary and action items
-    const { summary, actionItems } =
+    const { summary, actionItems, category } =
       await aiService.generateSummaryAndActionItems(transcript);
 
     await meetingRepo.updateMeetingSummaryAndActionItems(
       meetingId,
       summary,
-      actionItems
+      actionItems,
+      category
     );
 
     // Create tasks for the action items
     await meetingRepo.createTasksForMeeting(meetingId, actionItems, userId);
 
-    return { summary, actionItems };
+    return { summary, actionItems, category };
   },
 };

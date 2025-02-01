@@ -121,6 +121,7 @@ export const meetingController = {
         message: "Meeting summarized successfully",
         summary: result.summary,
         actionItems: result.actionItems,
+        category: result.category,
       });
     } catch (err) {
       next(err);
