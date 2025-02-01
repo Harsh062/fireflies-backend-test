@@ -1,61 +1,194 @@
-# Fireflies.ai backend test
+# MeetingBot API
 
-This project looks awful, somebody really messed it up. Can you help us fix it?
+MeetingBot API is a service designed to manage meetings, tasks, and AI-powered summaries efficiently. It provides a robust backend with MongoDB as a database and leverages containerization via Docker. Users can create, update, and retrieve meetings while the AI service generates summaries and action items based on meeting transcripts.
 
-## Instructions
+## Table of Contents
 
-Clone (**don't fork**) this repo, and set up the project locally.
-Ensure that you have MongoDB running locally, and node v22.
+- [Technologies](#technologies)
+- [Features](#features)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Running the Project](#running-the-project)
+- [Running Tests](#running-tests)
+- [Seeding the Database](#seeding-the-database)
+- [API Endpoints](#api-endpoints)
+- [Error Handling](#error-handling)
 
+---
+
+## **Technologies**
+
+This project is built using:
+
+- **Node.js** - Backend runtime
+- **Express.js** - Web framework for building RESTful APIs
+- **MongoDB** - NoSQL database for storing meetings and tasks
+- **Zod** - Input validation for API requests
+- **Jest** - Unit testing framework
+- **Typescript** - Strongly typed JavaScript
+- **Docker** - Containerization for easy deployment
+- **Docker Compose** - Orchestrates multiple containers (MongoDB, API)
+- **AI Service (Mock)** - Generates meeting summaries, action items and category based on transcripts
+
+---
+
+## **Features**
+
+- **Meeting Management** - Create, retrieve, update, and delete meetings.
+- **Task Management** - Tasks are automatically generated from AI-generated action items.
+- **AI-Powered Summarization** - Automatically generates meeting summaries and action items.
+- **Auto-Tagging** - Meetings are categorized based on AI analysis.
+- **User-Based Meeting Statistics** - Users get personalized meeting analytics.
+- **Pagination & Sorting** - Optimized fetching of meetings with pagination and sorting.
+- **Input Validation** - All request bodies are validated using Zod.
+- **Error Handling** - Centralized error handling for consistent API responses.
+
+---
+
+## **Installation**
+
+### **1\. Clone the Repository**
+
+```bash
+git clone <your-repository-url>
+cd meetingbot-api
 ```
-npm i
-npm run seed
-npm start
+
+### **2\. Ensure You Have Docker Installed**
+
+Ensure **Docker** and **Docker Compose** are installed on your system.
+
+### **3\. Run the Application Using Docker**
+
+```bash
+docker-compose up --build
 ```
 
-Create a new public repo on your GitHub, push your changes there and send us the link.
+This will start:
 
-### Project Setup:
+- The **MongoDB** database
+- The **Node.js API server**
 
-- Organize the project structure to improve maintainability (if you think it's necessary).
-- Add basic error handling and input validation to all endpoints.
-- It seems there is a very critical bug here. Can you spot it?
-- Also, it doesn't look very performant as the meeting count increases. Would it scale?
-- (Bonus) Implement basic unit tests for at least one endpoint.
+### **4\. Verify the API is Running**
 
-### API
+Once the services are up, you can access the API at:
 
-By the end of the project, we should have the following endpoints implemented:
+```javascript
+http://localhost:3000
+```
 
-- `GET /api/meetings` - Retrieves all the meetings.
+---
 
-- `POST /api/meetings` - Create a new meeting with title, date, and participants.
+## **Configuration**
 
-- `GET /api/meetings/:id` - Retrieve a specific meeting by ID. Include its tasks.
+Create a `.env` file in the project root and set the environment variables:
 
-- `PUT /api/meetings/:id/transcript` - Update a meeting with its transcript.
+```javascript
+MONGODB_URI=mongodb://mongo:27017/meetingbot
+PORT=3000
+```
 
-- `POST /api/meetings/:id/summarize` - Generate a summary and action items for a meeting (you can use a mock AI service for this).
-  Once the AI service returns the action items, you should automatically create the tasks for this meeting.
+- `MONGODB_URI` connects to the MongoDB instance inside the Docker container.
+- `PORT` sets the API port (default `3000`).
 
-- `GET /api/meetings/stats` - Return statistics about meetings, such as the total number of meetings, average number of participants, and most frequent participants.
-  Please follow the data structure defined in the router file.
+---
 
-- `GET /api/dashboard` - Return a summary of the user's meetings, including count and upcoming meetings, task counts by status, and past due tasks. The data structure is also defined in the endpoint file.
+## **Running the Project**
 
-### Containerize it!
+Once the project is running via `docker-compose`, API requests can be made using **Postman** or `curl`.
 
-You should add a `docker-compose` file spinning up all the required dependencies, and include clear instructions about how to run this on our local environment.
-The easier, the better. In order to evaluate it, we'll run it on our local hosts, seeding with known data and will compare the output of the requested endpoints.
+### **To Stop the Project**
 
-## Evaluation Criteria:
+```bash
+docker-compose down
+```
 
-We want you to impress us with your attention to detail, but some points that will be evaluated are:
+---
 
-- Documentation - clear instructions on a README file are the other developer's best friend.
-- Code quality and organization - we can only scale if we have high-quality, maintainable code
-- Ability to identify and fix the existing bug - security bugs would be a disaster for the company
-- Implementation of the stats and dashboard endpoints using performant, aggregation queries
-- Error handling and input validation
-- Bonus points for unit tests or any additional features related to the AI bot concept
-- We know the auth mechanism is sub-optimal for a production system, but there's no need to refactor it. Our automated testing script will send the `x-user-id` header with known values, so using a different auth mechanism will create a lot of work for us.
+## **Running Tests**
+
+To execute the unit tests:
+
+```bash
+docker-compose exec app npm run test
+```
+
+- Tests are written using **Jest**.
+- The test suite covers files in services folder
+
+---
+
+## **Seeding the Database**
+
+To populate the database with test data:
+
+```bash
+docker-compose exec app npm run seed
+```
+
+This will add:
+
+- **Sample Meetings**
+- **Sample Tasks**
+- **Pre-populated Users**
+
+---
+
+## **API Endpoints**
+
+### **Meetings**
+
+| Method | Endpoint                       | Description                           |
+| ------ | ------------------------------ | ------------------------------------- |
+| `GET`  | `/api/meetings`                | Get all meetings (paginated & sorted) |
+| `GET`  | `/api/meetings/:id`            | Get a single meeting by its ID        |
+| `POST` | `/api/meetings`                | Create a new meeting                  |
+| `PUT`  | `/api/meetings/:id/transcript` | Update the transcript of a meeting    |
+| `POST` | `/api/meetings/:id/summarize`  | Generate summary & action items (AI)  |
+
+### **Dashboard**
+
+| Method | Endpoint         | Description                          |
+| ------ | ---------------- | ------------------------------------ |
+| `GET`  | `/api/dashboard` | Get user-specific meeting statistics |
+
+---
+
+## **Error Handling**
+
+The API uses a centralized error-handling approach. All errors return a consistent JSON response.
+
+### **Example Error Response**
+
+```json
+{
+  "message": "Meeting not found"
+}
+```
+
+### **Common Errors**
+
+| Status Code                 | Error Description                            |
+| --------------------------- | -------------------------------------------- |
+| `400` Bad Request           | Validation failed, request body is incorrect |
+| `401` Unauthorized          | User is not authenticated                    |
+| `403` Forbidden             | User does not have permission                |
+| `404` Not Found             | Resource does not exist                      |
+| `500` Internal Server Error | Unexpected server error                      |
+
+---
+
+## **Scalability Considerations**
+
+- **Optimized MongoDB Queries** - Queries use indexing and filtering for performance.
+- **Pagination & Sorting** - Prevents excessive database load.
+- **Dockerized Deployment** - Easily scalable across multiple containers.
+- **AI Processing Optimization** - Future improvements can offload AI processing to a dedicated microservice.
+
+---
+
+## **Conclusion**
+
+This project provides a robust **meeting and task management API** with **AI-powered features**. The application is containerized with **Docker**, tested using **Jest**, and ensures **scalability** with **MongoDB optimizations**.
+
+---
