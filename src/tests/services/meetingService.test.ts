@@ -17,7 +17,7 @@ describe("MeetingService", () => {
     title: "Test Meeting",
     date: new Date(),
     participants: ["Alice", "Bob"],
-    transcript: "This is a sample transcript.",
+    transcript: "Discussion about blockers.",
     summary: "",
     actionItems: [],
     duration: 60,
@@ -53,11 +53,12 @@ describe("MeetingService", () => {
     it("should generate and save summary and action items for a meeting", async () => {
       const mockSummary = "This is a summary.";
       const mockActionItems = ["Action Item 1", "Action Item 2"];
-
+      const mockCategory = "Stand-up";
       mockMeetingRepo.findMeetingById.mockResolvedValue(sampleMeeting);
       mockAiService.generateSummaryAndActionItems.mockResolvedValue({
         summary: mockSummary,
         actionItems: mockActionItems,
+        category: mockCategory,
       });
 
       await meetingService.summarizeMeeting("123", "user1");
@@ -68,7 +69,7 @@ describe("MeetingService", () => {
       );
       expect(
         mockMeetingRepo.updateMeetingSummaryAndActionItems
-      ).toHaveBeenCalledWith("123", mockSummary, mockActionItems);
+      ).toHaveBeenCalledWith("123", mockSummary, mockActionItems, mockCategory);
     });
 
     it("should throw an error if the meeting does not exist", async () => {
