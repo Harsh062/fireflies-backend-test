@@ -10,8 +10,20 @@ jest.mock("../../services/aiService");
 const mockMeetingRepo = meetingRepo as jest.Mocked<typeof meetingRepo>;
 const mockAiService = aiService as jest.Mocked<typeof aiService>;
 
+interface Meeting {
+  _id: string;
+  userId: string;
+  title: string;
+  date: Date;
+  participants: string[];
+  transcript: string;
+  summary: string;
+  actionItems: string[];
+  duration: number;
+}
+
 describe("MeetingService", () => {
-  const sampleMeeting: any = {
+  const sampleMeeting: Meeting = {
     _id: "123",
     userId: "user1",
     title: "Test Meeting",

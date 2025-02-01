@@ -1,4 +1,5 @@
 import NodeCache from "node-cache";
+import { UpdateQuery } from "mongoose";
 import { IMeeting, Meeting } from "../models/meeting";
 import { Task } from "../models/task";
 import { db } from "./db";
@@ -6,6 +7,29 @@ import { db } from "./db";
 // Initialize cache with a 5-minute TTL (Time To Live)
 const cache = new NodeCache({ stdTTL: 300 });
 
+export interface MeetingStats {
+  generalStats: {
+    totalMeetings: number;
+    averageParticipants: number;
+    totalParticipants: number;
+    shortestMeeting: number;
+    longestMeeting: number;
+    averageDuration: number;
+  };
+  topParticipants: { participant: string; meetingCount: number }[];
+  meetingsByDayOfWeek: { dayOfWeek: number; count: number }[];
+}
+
+// Define day of the week stats type
+interface DayOfWeekStat {
+  _id: number;
+  count: number;
+}
+
+interface ParticipantStat {
+  _id: string;
+  meetingCount: number;
+}
 export const meetingRepo = {
   // Find a meeting by ID and user (ensuring ownership)
   findMeetingByIdAndUser: async (meetingId: string, userId: string) => {
@@ -18,7 +42,7 @@ export const meetingRepo = {
   },
 
   // Create a new meeting record
-  createMeeting: async (meetingData: any) => {
+  createMeeting: async (meetingData: IMeeting): Promise<IMeeting> => {
     return db.create(Meeting, meetingData);
   },
 
@@ -28,7 +52,10 @@ export const meetingRepo = {
   },
 
   // Update specific fields of a meeting
-  updateMeeting: async (id: string, updateData: any) => {
+  updateMeeting: async (
+    id: string,
+    updateData: UpdateQuery<IMeeting>
+  ): Promise<IMeeting | null> => {
     return db.updateById(Meeting, id, updateData);
   },
 
@@ -110,7 +137,7 @@ export const meetingRepo = {
     ]);
 
     // Construct final stats response
-    const stats = {
+    const stats: MeetingStats = {
       generalStats: {
         totalMeetings: generalStats[0]?.totalMeetings || 0,
         averageParticipants: generalStats[0]?.averageParticipants || 0,
@@ -119,13 +146,14 @@ export const meetingRepo = {
         longestMeeting: generalStats[0]?.longestMeeting || 0,
         averageDuration: generalStats[0]?.averageDuration || 0,
       },
-      topParticipants: topParticipants.map((participant: any) => ({
+      topParticipants: topParticipants.map((participant: ParticipantStat) => ({
         participant: participant._id,
         meetingCount: participant.meetingCount,
       })),
       meetingsByDayOfWeek: Array.from({ length: 7 }, (_, index) => {
         const dayStats =
-          meetingsByDayOfWeek.find((d: any) => d._id === index + 1) || {};
+          meetingsByDayOfWeek.find((d: DayOfWeekStat) => d._id === index + 1) ||
+          {};
         return { dayOfWeek: index + 1, count: dayStats.count || 0 };
       }),
     };
