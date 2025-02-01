@@ -1,6 +1,6 @@
 # MeetingBot API
 
-MeetingBot API is a backend service for **managing meetings and tasks** with AI-powered summarization and tagging. The API provides efficient meeting organization, task generation, and optimized query performance through caching and indexing.
+MeetingBot API is a backend service for **managing meetings and tasks** with **AI-powered summarization and tagging**. The API provides efficient meeting organization, task generation, and optimized query performance through caching and indexing.
 
 ## Table of Contents
 
@@ -16,12 +16,11 @@ MeetingBot API is a backend service for **managing meetings and tasks** with AI-
 
 ## Features
 
-✅ APIs to Create, update, and retrieve **meetings**.
-✅ Automatically generate **tasks** based on meeting summaries.
-✅ Generate summaries and action items from transcripts (Powered by **AI**).
-✅ Meetings are automatically categorized (Powered by **AI**).
-✅ Implemented caching and indexing for better scalability.
-✅ Users can only access their own meetings, tasks and dashboard data.
+- APIs to Create, update, and retrieve **meetings**.
+- Automatically generate **tasks** based on meeting summaries.
+- **AI powered** summaries, action items and tagging from transcripts
+- Caching and indexing for better scalability.
+- Users can only access their own meetings, tasks and dashboard data.
 
 ## Setup & Installation
 
@@ -120,6 +119,4 @@ All errors are standardized and return JSON responses:
 - **404** – Not Found (Resource does not exist)
 - **500** – Internal Server Error (Unexpected issues)
 
----
-
-For additional details on project structure, optimizations, and security fixes, refer to [Project Overview]().
+For additional details on project structure, optimizations, and security fixes, refer to [Project Overview](https://github.com/Harsh062/fireflies-backend-test/blob/master/project-overview.md).
