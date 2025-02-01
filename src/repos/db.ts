@@ -1,11 +1,4 @@
-import {
-  Model,
-  FilterQuery,
-  UpdateQuery,
-  AnyKeys,
-  ProjectionType,
-  SortOrder,
-} from "mongoose";
+import { Model, FilterQuery, UpdateQuery, Document, AnyKeys } from "mongoose";
 
 export const db = {
   // Find a single document matching the filter criteria
@@ -14,11 +7,11 @@ export const db = {
   },
 
   // Find multiple documents with pagination and sorting
-  find: async <T>(
-    model: Model<T>,
-    query: FilterQuery<T>,
+  find: async (
+    model: any,
+    query: any,
     { page, limit }: { page: number; limit: number },
-    sort: Record<string, SortOrder> = { date: -1 }
+    sort: any = { date: -1 }
   ) => {
     return model
       .find(query)
@@ -28,37 +21,29 @@ export const db = {
   },
 
   // Find a document by its ID
-  findById: async <T>(model: Model<T>, id: string): Promise<T | null> => {
+  findById: async (model: any, id: string) => {
     return model.findById(id);
   },
 
   // Create a new document and save it to the database
-  create: async <T>(model: Model<T>, data: T): Promise<T> => {
+  create: async (model: any, data: any) => {
     const doc = new model(data);
     return doc.save();
   },
 
   // Update a document by its ID and return the updated version
-  updateById: async <T>(
-    model: Model<T>,
-    id: string,
-    updateData: UpdateQuery<T>
-  ) => {
+  updateById: async (model: any, id: string, updateData: any) => {
     return model.findByIdAndUpdate(id, updateData, { new: true });
   },
 
   // Find documents with a specific projection (select only required fields)
-  findWithProjection: <T>(
-    model: Model<T>,
-    filter: FilterQuery<T>,
-    projection: ProjectionType<T>
-  ) => {
-    return model.find(filter, projection);
+  findWithProjection: (Model: any, filter: any, projection: any) => {
+    return Model.find(filter, projection);
   },
 
   // Count the number of documents that match the filter criteria
-  countDocuments: <T>(model: Model<T>, filter: FilterQuery<T>) => {
-    return model.countDocuments(filter);
+  countDocuments: (Model: any, filter: any) => {
+    return Model.countDocuments(filter);
   },
 
   // Update a single document matching the filter criteria

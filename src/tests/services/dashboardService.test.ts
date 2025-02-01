@@ -1,23 +1,13 @@
 import { dashboardService } from "../../services/dashboardService";
 import { dashboardRepo } from "../../repos/dashboardRepo";
-import { Types } from "mongoose";
-
-interface UpcomingMeeting {
-  _id: Types.ObjectId | string;
-  title: string;
-  date: Date;
-  participants: string[];
-  transcript: string;
-  summary: string;
-  actionItems: string[];
-}
+import { IMeeting } from "../../models/meeting";
 
 jest.mock("../../repos/dashboardRepo");
 
 describe("dashboardService", () => {
   const mockUserId = "user123";
 
-  const mockUpcomingMeetings: UpcomingMeeting[] = [
+  const mockUpcomingMeetings: any = [
     {
       _id: "meeting1",
       title: "Upcoming Meeting 1",

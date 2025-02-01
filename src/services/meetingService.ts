@@ -14,7 +14,7 @@ export const meetingService = {
   },
 
   // Create a new meeting record
-  createMeeting: async (meetingData: IMeeting) => {
+  createMeeting: async (meetingData: any) => {
     return meetingRepo.createMeeting(meetingData);
   },
 
