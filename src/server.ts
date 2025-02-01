@@ -9,11 +9,6 @@ const { PORT = 3000, MONGODB_URI = "mongodb://mongo:27017/meetingbot" } =
 
 const app = express();
 
-await mongoose
-  .connect(MONGODB_URI)
-  .then((conn) => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("MongoDB connection error:", err));
-
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -23,6 +18,18 @@ app.get("/", (req, res) => {
 app.use("/api/meetings", authMiddleware, meetingRoutes);
 app.use("/api/dashboard", authMiddleware, dashboardRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+const startServer = async () => {
+  try {
+    await mongoose.connect(MONGODB_URI);
+    console.log("✅ Connected to MongoDB");
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error("❌ MongoDB connection error:", err);
+    process.exit(1);
+  }
+};
+
+startServer();
