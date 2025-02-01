@@ -1,175 +1,235 @@
 {
-  "info": {
-    "_postman_id": "65b05ee4-7b5f-4924-baf2-351a14c6e603",
-    "name": "Fireflies APIs",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "2250172"
-  },
-  "item": [
-    {
-      "name": "GET ALL MEETINGS FOR A USER",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "x-user-id",
-            "value": "user2",
-            "type": "text"
-          }
-        ],
-        "url": {
-          "raw": "http://localhost:3000/api/meetings",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["api", "meetings"]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "CREATE MEETING",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "x-user-id",
-            "value": "user4",
-            "type": "default"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"title\": \"Sample meeting\",\n  \"date\": \"2025-05-01T10:00:00.000Z\",\n  \"participants\": [\"John Doe\", \"Jane Smith\", \"Alice Johnson\", \"Alicia Johnson\"]\n}\n",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:3000/api/meetings",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["api", "meetings"]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "GET MEETING BY ID",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "x-user-id",
-            "value": "user2",
-            "type": "text"
-          }
-        ],
-        "url": {
-          "raw": "http://localhost:3000/api/meetings/679d86f9279a58acb6c6ac46",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["api", "meetings", "679d86f9279a58acb6c6ac46"]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "UPDATE TRANSCRIPT FOR A MEETING",
-      "request": {
-        "method": "PUT",
-        "header": [
-          {
-            "key": "x-user-id",
-            "value": "user2",
-            "type": "text"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"transcript\": \"Discuss blockers\"\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:3000/api/meetings/679d86f9279a58acb6c6ac46/transcript",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["api", "meetings", "679d86f9279a58acb6c6ac46", "transcript"]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "GET MEETING STATS FOR USER",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "x-user-id",
-            "value": "user4",
-            "type": "text"
-          }
-        ],
-        "url": {
-          "raw": "http://localhost:3000/api/meetings/stats",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["api", "meetings", "stats"]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "GET DASHBOARD DATA FOR USER",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "x-user-id",
-            "value": "user1",
-            "type": "text"
-          }
-        ],
-        "url": {
-          "raw": "http://localhost:3000/api/dashboard",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["api", "dashboard"]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "SUMMARIZE MEETING",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "x-user-id",
-            "value": "user2",
-            "type": "text"
-          }
-        ],
-        "url": {
-          "raw": "http://localhost:3000/api/meetings/679dae17ae9874efcfd60766/summarize",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["api", "meetings", "679dae17ae9874efcfd60766", "summarize"]
-        }
-      },
-      "response": []
-    }
-  ]
+	"info": {
+		"_postman_id": "65b05ee4-7b5f-4924-baf2-351a14c6e603",
+		"name": "Fireflies APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2250172"
+	},
+	"item": [
+		{
+			"name": "GET ALL MEETINGS FOR A USER",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-user-id",
+						"value": "user2",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/api/meetings",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"meetings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE MEETING",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-user-id",
+						"value": "user4",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"Super se niche ki bhi meeting\",\n  \"date\": \"2025-05-01T10:00:00.000Z\",\n  \"participants\": [\"John Doe\", \"Jane Smith\", \"Alice Johnson\", \"Alicia Johnson\"]\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/meetings",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"meetings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET MEETING BY ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-user-id",
+						"value": "user2",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/api/meetings/679e083f926f4d611ce84dbf",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"meetings",
+						"679e083f926f4d611ce84dbf"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UPDATE TRANSCRIPT FOR A MEETING",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-user-id",
+						"value": "user2",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"transcript\": \"Discuss blockers\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/meetings/679e083f926f4d611ce84dbf/transcript",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"meetings",
+						"679e083f926f4d611ce84dbf",
+						"transcript"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET MEETING STATS FOR USER",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-user-id",
+						"value": "user4",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/api/meetings/stats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"meetings",
+						"stats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET DASHBOARD DATA FOR USER",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-user-id",
+						"value": "user1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/api/dashboard",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"dashboard"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SUMMARIZE MEETING",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-user-id",
+						"value": "user2",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/api/meetings/679e083f926f4d611ce84dbf/summarize",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"meetings",
+						"679e083f926f4d611ce84dbf",
+						"summarize"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HEALTH CHECK API",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000"
+				}
+			},
+			"response": []
+		}
+	]
 }
