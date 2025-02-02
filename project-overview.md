@@ -27,6 +27,7 @@ To ensure the API scales well with increasing data, I implemented the following 
 2. **Optimized Meeting Stats**: Aggregated statistics per user instead of global aggregation, reducing query complexity.
 3. **Indexes on Commonly Queried Fields**: Indexed `userId` and `date` fields to speed up database queries.
 4. **Batch Processing for AI Tasks**: Summarization and tagging are processed asynchronously, improving API responsiveness.
+5. **Caching Optimization**: Implemented caching for frequently accessed data to reduce redundant database queries and improve response times.
 
 ## AI-Powered Auto-Tagging Feature (Bonus)
 
