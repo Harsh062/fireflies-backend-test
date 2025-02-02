@@ -45,7 +45,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"title\": \"Super se niche ki bhi meeting\",\n  \"date\": \"2025-05-01T10:00:00.000Z\",\n  \"participants\": [\"John Doe\", \"Jane Smith\", \"Alice Johnson\", \"Alicia Johnson\"]\n}\n",
+					"raw": "{\n  \"title\": \"Super meeting\",\n  \"date\": \"2025-05-01T10:00:00.000Z\",\n  \"participants\": [\"John Doe\", \"Jane Smith\", \"Alice Johnson\", \"Alicia Johnson\"]\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
